@@ -99,39 +99,7 @@ namespace Distance_vector_simulator
             Router rTo = Routers.First(x => x.Id == to);
             foreach(Path pNew in rFrom.Paths)
             {
-                int weightNew;
-                if (pNew.Weight == -1)
-                    weightNew = -1;
-                else
-                    weightNew = pNew.Weight + rTo.Paths.First(x => x.Destination == from).Weight;
-                rTo.ChangePath(new Path(pNew.Destination, weightNew, rFrom.Id));
-                /*
-                if (pNew.Destination == rTo.Id)
-                    continue;
-                Path pOld = rTo.Paths.FirstOrDefault(x => x.Destination == pNew.Destination);
-                
-                int weightNew = pNew.Weight + rTo.Paths.First(x => x.Destination == rFrom.Id).Weight;
-                if (pOld == null)
-                {
-                    rTo.Paths.Add(new Path(pNew.Destination, weightNew, rFrom.Id));
-                }
-                else if (pNew.Weight == -1)
-                {
-                    //if (!rTo.HasNeighbour(pNew.Destination))
-                    //{
-                    //    rTo.Paths.Remove(pOld);
-                    //    rTo.Paths.Add(new Path(pNew.Destination, -1, rTo.Id));
-                    //}
-
-                    continue;
-                }
-                else if (rFrom.Id == pOld.NextHop ||pOld.Weight == -1 || weightNew < pOld.Weight)
-                {
-                    rTo.Paths.Remove(pOld);
-                    rTo.Paths.Add(new Path(pNew.Destination, weightNew, rFrom.Id));
-                }
-                */
-
+                rTo.ChangePath(pNew, from, true);
             }
             rTo.SortPaths();
             //r2.Paths.First(x => x.Destination)

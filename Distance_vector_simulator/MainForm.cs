@@ -23,49 +23,100 @@ namespace Distance_vector_simulator
 
         private void buttonAddRouter_Click(object sender, EventArgs e)
         {
-            RouterForm rf = new RouterForm(Net.AddRouter(int.Parse(textBoxRouterId.Text)));
-            RoutersForms.Add(rf);
-            rf.Show();
+            try
+            {
+                int id = int.Parse(textBoxRouterId.Text);
+                RouterForm rf = new RouterForm(Net.AddRouter(id));
+                RoutersForms.Add(rf);
+                rf.Show();
+                textBoxRouterId.Text = (id + 1).ToString();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
         }
 
         private void buttonRemoveRouter_Click(object sender, EventArgs e)
         {
-            Net.RemoveRouter(int.Parse(textBoxRouterId.Text));
-            RouterForm rf = (RouterForm)RoutersForms.First(x => x.Text == textBoxRouterId.Text);
-            rf.Close();
-            RoutersForms.Remove(rf);
-            RefreshRouters();
+            try
+            {
+                Net.RemoveRouter(int.Parse(textBoxRouterId.Text));
+                RouterForm rf = (RouterForm)RoutersForms.First(x => x.Text == textBoxRouterId.Text);
+                rf.Close();
+                RoutersForms.Remove(rf);
+                RefreshRouters();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
         }
 
         private void buttonAddLink_Click(object sender, EventArgs e)
         {
-            Net.AddLink(int.Parse(textBoxRouterId1.Text), int.Parse(textBoxRouterId2.Text), int.Parse(textBoxWeight.Text));
-            RefreshRouters();
+            try
+            {
+                Net.AddLink(int.Parse(textBoxRouterId1.Text), int.Parse(textBoxRouterId2.Text), int.Parse(textBoxWeight.Text));
+                RefreshRouters();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
         }
 
         private void buttonRemoveLink_Click(object sender, EventArgs e)
         {
-            Net.RemoveLink(int.Parse(textBoxRouterId1.Text), int.Parse(textBoxRouterId2.Text));
-            RefreshRouters();
+            try
+            {
+                Net.RemoveLink(int.Parse(textBoxRouterId1.Text), int.Parse(textBoxRouterId2.Text));
+                RefreshRouters();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
         }
 
         private void buttonChangeWeight_Click(object sender, EventArgs e)
         {
-            Net.ChangeWeight(int.Parse(textBoxRouterId1.Text), int.Parse(textBoxRouterId2.Text), int.Parse(textBoxWeight.Text));
-            RefreshRouters();
+            try
+            {
+                Net.ChangeWeight(int.Parse(textBoxRouterId1.Text), int.Parse(textBoxRouterId2.Text), int.Parse(textBoxWeight.Text));
+                RefreshRouters();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
         }
         private void RefreshRouters()
         {
-            foreach (RouterForm rf in RoutersForms)
+            try
             {
-                rf.RefreshGrid();
+                foreach (RouterForm rf in RoutersForms)
+                {
+                    rf.RefreshGrid();
+                }
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
             }
         }
 
         private void buttonIteration_Click(object sender, EventArgs e)
         {
-            Net.DoIteration();
-            RefreshRouters();
+            try
+            {
+                Net.DoIteration();
+                RefreshRouters();
+            }
+            catch (Exception exc)
+            {
+                MessageBox.Show(exc.Message);
+            }
         }
     }
 }
