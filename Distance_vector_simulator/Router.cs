@@ -40,6 +40,11 @@ namespace Distance_vector_simulator
                 //Paths.Remove(p);
                 p.Weight = -1;
             }
+            foreach (var path in Paths)
+            {
+                if (path.NextHop == id)
+                    path.Weight = -1;
+            }
         }
         public bool HasNeighbour(int id)
         {
@@ -50,7 +55,37 @@ namespace Distance_vector_simulator
             if (Neighbours.Count(x => x.Id == id) == 0)
                 throw new InvalidOperationException(id + " is not a neighbour of " + this.Id);
             Neighbours.First(x => x.Id == id).Weight = weight;
+            ChangePath(new Path(id, weight, id));
         }
-        
+        public void ChangePath(Path pNew)
+        {
+            if (pNew.Destination == Id)
+                return;
+            Path pOld = Paths.FirstOrDefault(x => x.Destination == pNew.Destination);
+
+            if (pOld == null)
+            {
+                Paths.Add(pNew);
+            }
+            else if (pNew.NextHop == pOld.NextHop || pOld.Weight == -1 || (pNew.Weight < pOld.Weight && pNew.Weight != -1))
+            {
+                Paths.Remove(pOld);
+                Paths.Add(pNew);
+            }
+            else if (pNew.Weight == -1)
+            {
+                //if (!rTo.HasNeighbour(pNew.Destination))
+                //{
+                //    rTo.Paths.Remove(pOld);
+                //    rTo.Paths.Add(new Path(pNew.Destination, -1, rTo.Id));
+                //}
+
+                return;
+            }
+        }
+        public void SortPaths()
+        {
+            Paths.Sort();
+        }
     }
 }

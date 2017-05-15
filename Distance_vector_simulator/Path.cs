@@ -6,17 +6,21 @@ using System.Threading.Tasks;
 
 namespace Distance_vector_simulator
 {
-    class Path
+    class Path : IComparable
     {
         public int Destination { get; set; }
         public int Weight { get; set; }
         public int NextHop { get; set; }
-        public int
+        //public int 
         public Path(int destination, int weight, int nextHop)
         {
             Destination = destination;
             Weight = weight;
             NextHop = nextHop;
+        }
+        public int CompareTo(object obj)
+        {
+            return Destination.CompareTo(((Path)obj).Destination);
         }
     }
 }
