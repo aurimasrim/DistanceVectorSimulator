@@ -12,7 +12,7 @@ namespace Distance_vector_simulator
         public int Weight { get; set; }
         public int NextHop { get; set; }
         public int HopCount { get; set; }
-        public int LearnedFrom { get; set; }
+        //public int LearnedFrom { get; set; }
         public Path(int destination, int weight, int nextHop, int hopCount)
         {
             Destination = destination;

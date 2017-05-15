@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace Distance_vector_simulator
 {
@@ -49,6 +50,7 @@ namespace Distance_vector_simulator
                     if (!HasNeighbour(pathDest))
                     {
                         Paths[i].Weight = -1;
+                        Paths[i].HopCount = -1;
                     }
                     else
                     {
@@ -71,14 +73,14 @@ namespace Distance_vector_simulator
             Neighbours.First(x => x.Id == id).Weight = weight;
             ChangePath(new Path(id, weight, id, 1), id, false);
         }
-        public void ChangePath(Path pNew, int from, bool calculateWeight)
+        public void ChangePath(Path pNew, int from, bool calculate)
         {
-            if (pNew.Destination == Id)
+            if (pNew.Destination == Id || pNew.NextHop == Id)
                 return;
             Path pOld = Paths.FirstOrDefault(x => x.Destination == pNew.Destination);
 
             int weightNew;
-            if (!calculateWeight)
+            if (!calculate)
             {
                 weightNew = pNew.Weight;
             }
@@ -86,7 +88,13 @@ namespace Distance_vector_simulator
                 weightNew = -1;
             else
                 weightNew = pNew.Weight + Neighbours.First(x => x.Id == from).Weight;
-
+            Debug.WriteLine("from = " + from);
+            Debug.WriteLine("to = " + Id);
+            if (pOld != null)
+                Debug.WriteLine("pOld.Weight = " + pOld.Weight);
+            Debug.WriteLine("pOld == null = " + pOld == null);
+            Debug.WriteLine("weightNew = " + weightNew);
+            Debug.WriteLine("");
             if (pNew.HopCount >= _maxHopCount)
             {
                 Paths.Remove(pOld);
@@ -94,17 +102,33 @@ namespace Distance_vector_simulator
             }
             else if (pOld == null)
             {
-                if (calculateWeight)
+                if (calculate)
                     Paths.Add(new Path(pNew.Destination, weightNew, from, pNew.HopCount + 1));
                 else
                     Paths.Add(new Path(pNew.Destination, weightNew, from, pNew.HopCount));
             }
-            else if (pNew.NextHop == pOld.NextHop || pOld.Weight == -1 || (weightNew < pOld.Weight && weightNew != -1))
+            else if (weightNew == -1 && from == pOld.NextHop)
             {
+                Paths.Remove(pOld);
+                if (HasNeighbour(pNew.Destination))
+                {
+                    Neighbour n = Neighbours.FirstOrDefault(x => x.Id == pNew.Destination);
+                    Paths.Add(new Path(n.Id, n.Weight, n.Id, 1));
+                }
+                else
+                {
+                    Paths.Remove(pOld);
+                    Paths.Add(new Path(pNew.Destination, weightNew, from, -1));
+                }
+            }
+            else if (from == pOld.NextHop || pOld.Weight == -1 || (weightNew < pOld.Weight && weightNew != -1))
+            {
+                Debug.WriteLine("in last");
                 int hopCount = pNew.HopCount;
-                if (calculateWeight)
+                if (calculate)
                     hopCount++;
                 Paths.Remove(pOld);
+                Debug.WriteLine("");
                 Paths.Add(new Path(pNew.Destination, weightNew, from, hopCount));
             }
         }

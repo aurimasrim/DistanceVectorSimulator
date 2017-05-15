@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
-using System.Windows.Forms;
 
 namespace Distance_vector_simulator
 {
@@ -33,8 +32,6 @@ namespace Distance_vector_simulator
                 if (r.HasNeighbour(id))
                 {
                     r.RemoveNeighbour(id);
-                    MessageBox.Show(id.ToString());
-                    MessageBox.Show(r.HasNeighbour(id).ToString());
                 }
                     
             }
